@@ -10,7 +10,7 @@ bool DoxyparseLanguageChecker::isCCode(FileNameListIterator &fnli)
 {
   FileName* fn;
   bool isCCode = true;
-  for(fnli.toFirst(); isCCode && (fn=fnli.current()); ++fnli)
+  for (fnli.toFirst();isCCode && (fn=fnli.current());++fnli)
   {
     std::string filename = fn->fileName();
     isCCode =

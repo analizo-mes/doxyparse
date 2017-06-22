@@ -20,7 +20,7 @@ bool Doxyparse::setInput(int argc, char **argv)
 {
   DoxyparseInput doxyparseInput;
   const bool successful_set_the_input = doxyparseInput.set(argc, argv);
-  if(successful_set_the_input)
+  if (successful_set_the_input)
   {
     doxyparseInput.parse();
   }
@@ -33,20 +33,20 @@ void Doxyparse::parse()
   doxyparser.parseReferences();
 }
 
-void Doxyparse::listResults()
+void Doxyparse::informResults()
 {
   DoxyparseResults doxyparseResults;
-  doxyparseResults.listSymbols();
+  doxyparseResults.informResults();
 }
 
 void Doxyparse::removeTemporaryFiles()
 {
-  if(!Doxygen::objDBFileName.isEmpty())
+  if (!Doxygen::objDBFileName.isEmpty())
   {
     unlink(Doxygen::objDBFileName);
   }
 
-  if(!Doxygen::entryDBFileName.isEmpty())
+  if (!Doxygen::entryDBFileName.isEmpty())
   {
     unlink(Doxygen::entryDBFileName);
   }

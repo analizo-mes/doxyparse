@@ -3,7 +3,8 @@
 void DoxyparseInterface::linkableSymbol(int l, const char *sym,
 	Definition *symDef, Definition *context)
 {
-	if (!symDef) {
+	if (!symDef)
+  {
 		// in this case we have a local or external symbol
 
 		// TODO record use of external symbols

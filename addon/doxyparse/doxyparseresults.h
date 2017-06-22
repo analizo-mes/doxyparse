@@ -15,14 +15,13 @@ class DoxyparseResults
     DoxyparseResults();
    ~DoxyparseResults();
 
-    void listSymbols();
+    void informResults();
 
   private:
     bool isCCode;
 
     void printFile(FileDef *fd);
-    void listMembers(MemberList *ml);
-    void lookupSymbol(Definition *d);
+    void printMembers(MemberList *ml);
     void printDefinition(MemberDef *md);
     void printType(MemberDef *md);
     void printSignature(MemberDef *md);
@@ -43,6 +42,6 @@ class DoxyparseResults
     void printCModule(ClassDef *cd);
     void printClassInformation(ClassDef *cd);
     void printInheritance(ClassDef *cd);
-    void listAllMembers(ClassDef *cd);
+    void printAllMembers(ClassDef *cd);
 };
 #endif

@@ -5,7 +5,7 @@ DoxyparseResults::DoxyparseResults() {}
 DoxyparseResults::~DoxyparseResults() {}
 
 
-void DoxyparseResults::listSymbols()
+void DoxyparseResults::informResults()
 {
   // iterate over the input files
   FileNameListIterator fnli(*Doxygen::inputNameList);
@@ -15,17 +15,21 @@ void DoxyparseResults::listSymbols()
   isCCode = languageChecker.isCCode(fnli);
 
   // for each file
-  for (fnli.toFirst(); (fn=fnli.current()); ++fnli) {
+  for (fnli.toFirst();(fn=fnli.current());++fnli)
+  {
     FileNameIterator fni(*fn);
     FileDef *fd;
-    for (; (fd=fni.current()); ++fni) {
+    for (;(fd=fni.current());++fni)
+    {
       printFile(fd);
 
       ClassSDict *classes = fd->getClassSDict();
-      if (classes) {
+      if (classes)
+      {
         ClassSDict::Iterator cli(*classes);
         ClassDef *cd;
-        for (cli.toFirst(); (cd = cli.current()); ++cli) {
+        for (cli.toFirst();(cd = cli.current());++cli)
+        {
           printClass(cd);
         }
       }
@@ -38,31 +42,30 @@ void DoxyparseResults::printFile(FileDef *fd)
 {
   printf("file %s\n", fd->absFilePath().data());
   MemberList *ml = fd->getMemberList(MemberListType_allMembersList);
-  if (ml && ml->count() > 0) {
+  if (ml && ml->count() > 0)
+  {
     printf("module %s\n", fd->getOutputFileBase().data());
-    listMembers(ml);
+    printMembers(ml);
   }
 }
 
-void DoxyparseResults::listMembers(MemberList *ml)
+void DoxyparseResults::printMembers(MemberList *ml)
 {
-  if (ml) {
+  if (ml)
+  {
     MemberListIterator mli(*ml);
     MemberDef *md;
-    for (mli.toFirst(); (md=mli.current()); ++mli) {
-      lookupSymbol((Definition*) md);
-    }
-  }
-}
-
-void DoxyparseResults::lookupSymbol(Definition *d)
-{
-  if (d->definitionType() == Definition::TypeMember) {
-    MemberDef *md = (MemberDef *)d;
-    printDefinition(md);
-    printProtection(md);
-    if (md->isFunction()) {
-      printFunctionInformation(md);
+    for (mli.toFirst();(md=mli.current());++mli)
+    {
+      if (md->definitionType() == Definition::TypeMember)
+      {
+        printDefinition(md);
+        printProtection(md);
+        if (md->isFunction())
+        {
+          printFunctionInformation(md);
+        }
+      }
     }
   }
 }
@@ -83,7 +86,8 @@ void DoxyparseResults::printType(MemberDef *md)
 void DoxyparseResults::printSignature(MemberDef* md)
 {
   printf("%s", md->name().data());
-  if(md->isFunction()){
+  if (md->isFunction())
+  {
     printArgumentList(md);
   }
   printf(" ");
@@ -96,9 +100,11 @@ void DoxyparseResults::printArgumentList(MemberDef *md)
 
   printf("(");
   Argument * argument = iterator.toFirst();
-  if(argument != NULL) {
+  if (argument != NULL)
+  {
     printf("%s", argument->type.data());
-    for(++iterator; (argument = iterator.current()) ;++iterator){
+    for (++iterator;(argument = iterator.current());++iterator)
+    {
       printf(",%s", argument->type.data());
     }
   }
@@ -112,7 +118,8 @@ void DoxyparseResults::printDefinitionLine(MemberDef *md)
 
 void DoxyparseResults::printProtection(MemberDef *md)
 {
-  if (md->protection() == Public) {
+  if (md->protection() == Public)
+  {
     printf("      protection public\n");
   }
 }
@@ -145,12 +152,15 @@ void DoxyparseResults::printNumberOfConditionalPaths(MemberDef *md)
 void DoxyparseResults::printReferencesMembers(MemberDef *md)
 {
   MemberSDict *defDict = md->getReferencesMembers();
-  if (defDict) {
+  if (defDict)
+  {
     MemberSDict::Iterator msdi(*defDict);
     MemberDef *rmd;
-    for (msdi.toFirst(); (rmd=msdi.current()); ++msdi) {
+    for (msdi.toFirst();(rmd=msdi.current());++msdi)
+    {
       if (rmd->definitionType() == Definition::TypeMember
-          && !ignoreStaticExternalCall(md, rmd)) {
+          && !ignoreStaticExternalCall(md, rmd))
+      {
         printReferenceTo(rmd);
       }
     }
@@ -159,19 +169,23 @@ void DoxyparseResults::printReferencesMembers(MemberDef *md)
 
 bool DoxyparseResults::ignoreStaticExternalCall(MemberDef *context, MemberDef *md)
 {
-  if (md->isStatic()) {
-    if(md->getFileDef()) {
-      if(md->getFileDef()->getOutputFileBase() == context->getFileDef()->getOutputFileBase())
+  if (md->isStatic())
+  {
+    if (md->getFileDef())
+    {
+      if (md->getFileDef()->getOutputFileBase() == context->getFileDef()->getOutputFileBase())
         // TODO ignore prefix of file
         return false;
       else
         return true;
     }
-    else {
+    else
+    {
       return false;
     }
   }
-  else {
+  else
+  {
     return false;
   }
 }
@@ -179,10 +193,12 @@ bool DoxyparseResults::ignoreStaticExternalCall(MemberDef *context, MemberDef *m
 void DoxyparseResults::printReferenceTo(MemberDef *md)
 {
   printf("      uses ");
-  if (isPartOfCStruct(md)) {
+  if (isPartOfCStruct(md))
+  {
     printCStructMember(md);
   }
-  else {
+  else
+  {
     printType(md);
     printSignature(md);
     printWhereItWasDefined(md);
@@ -204,22 +220,28 @@ void DoxyparseResults::printCStructMember(MemberDef *md)
 
 void DoxyparseResults::printWhereItWasDefined(MemberDef *md)
 {
-  if (md->getClassDef()) {
+  if (md->getClassDef())
+  {
     printf("defined in %s\n", md->getClassDef()->name().data());
   }
-  else if (md->getFileDef()) {
+  else if (md->getFileDef())
+  {
     printf("defined in %s\n", md->getFileDef()->getOutputFileBase().data());
   }
-  else {
+  else
+  {
     printf("\n");
   }
 }
 
 void DoxyparseResults::printClass(ClassDef *cd)
 {
-  if (isCCode) {
+  if (isCCode)
+  {
     printCModule(cd);
-  } else {
+  }
+  else
+  {
     printClassInformation(cd);
   }
 }
@@ -227,10 +249,12 @@ void DoxyparseResults::printClass(ClassDef *cd)
 void DoxyparseResults::printCModule(ClassDef *cd)
 {
   MemberList* ml = cd->getMemberList(MemberListType_variableMembers);
-  if (ml) {
+  if (ml)
+  {
     MemberListIterator mli(*ml);
     MemberDef* md;
-    for (mli.toFirst(); (md=mli.current()); ++mli) {
+    for (mli.toFirst();(md=mli.current());++mli)
+    {
       printf("   variable %s::%s in line %d\n", cd->name().data(), md->name().data(), md->getDefLine());
       printProtection(md);
     }
@@ -241,30 +265,33 @@ void DoxyparseResults::printClassInformation(ClassDef *cd)
 {
   printf("module %s\n", cd->name().data());
   printInheritance(cd);
-  if(cd->isAbstract()) {
+  if (cd->isAbstract())
+  {
     printf("   abstract class\n");
   }
-  listAllMembers(cd);
+  printAllMembers(cd);
 }
 
 void DoxyparseResults::printInheritance(ClassDef *cd)
 {
   BaseClassList* baseClasses = cd->baseClasses();
-  if (baseClasses) {
+  if (baseClasses)
+  {
     BaseClassListIterator bci(*baseClasses);
     BaseClassDef* bcd;
-    for (bci.toFirst(); (bcd = bci.current()); ++bci) {
+    for (bci.toFirst();(bcd = bci.current());++bci)
+    {
       printf("   inherits from %s\n", bcd->classDef->name().data());
     }
   }
 }
 
-void DoxyparseResults::listAllMembers(ClassDef *cd)
+void DoxyparseResults::printAllMembers(ClassDef *cd)
 {
   // methods
-  listMembers(cd->getMemberList(MemberListType_functionMembers));
+  printMembers(cd->getMemberList(MemberListType_functionMembers));
   // constructors
-  listMembers(cd->getMemberList(MemberListType_constructors));
+  printMembers(cd->getMemberList(MemberListType_constructors));
   // attributes
-  listMembers(cd->getMemberList(MemberListType_variableMembers));
+  printMembers(cd->getMemberList(MemberListType_variableMembers));
 }

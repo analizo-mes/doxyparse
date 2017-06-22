@@ -16,7 +16,7 @@ class Doxyparse
     inline void configure();
     inline bool setInput(int argc, char **argv);
     inline void parse();
-    inline void listResults();
+    inline void informResults();
 
   private:
     inline void removeTemporaryFiles();

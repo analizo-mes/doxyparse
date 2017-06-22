@@ -9,11 +9,13 @@ void Doxyparser::parseReferences()
   FileNameListIterator fnli(*Doxygen::inputNameList);
   FileName *fn;
   // for each file with a certain name
-  for (fnli.toFirst();(fn=fnli.current());++fnli) {
+  for (fnli.toFirst();(fn=fnli.current());++fnli)
+  {
     FileNameIterator fni(*fn);
     FileDef *fd;
     // for each file definition
-    for (;(fd=fni.current());++fni) {
+    for (;(fd=fni.current());++fni)
+    {
       // get the references (linked and unlinked) found in this file
       findXRefSymbols(fd);
     }
