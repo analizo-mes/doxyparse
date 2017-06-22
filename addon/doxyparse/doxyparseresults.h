@@ -6,6 +6,7 @@
 #include "classlist.h"
 #include "filedef.h"
 #include "filename.h"
+#include "doxyparselanguagechecker.h"
 #include <string>
 
 class DoxyparseResults
@@ -17,10 +18,8 @@ class DoxyparseResults
     void listSymbols();
 
   private:
-    bool is_c_code;
+    bool isCCode;
 
-    void detectProgrammingLanguage(FileNameListIterator &fnli);
-    bool checkLanguage(std::string &filename, std::string extension);
     void printFile(FileDef *fd);
     void listMembers(MemberList *ml);
     void lookupSymbol(Definition *d);

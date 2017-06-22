@@ -1,9 +1,6 @@
 #include "doxyparseresults.h"
 
-DoxyparseResults::DoxyparseResults()
-{
-  is_c_code = true;
-}
+DoxyparseResults::DoxyparseResults() {}
 
 DoxyparseResults::~DoxyparseResults() {}
 
@@ -14,7 +11,8 @@ void DoxyparseResults::listSymbols()
   FileNameListIterator fnli(*Doxygen::inputNameList);
   FileName *fn;
 
-  detectProgrammingLanguage(fnli);
+  DoxyparseLanguageChecker languageChecker;
+  isCCode = languageChecker.isCCode(fnli);
 
   // for each file
   for (fnli.toFirst(); (fn=fnli.current()); ++fnli) {
@@ -34,35 +32,6 @@ void DoxyparseResults::listSymbols()
     }
   }
   // TODO print external symbols referenced
-}
-
-/* Detects the programming language of the project. Actually, we only care
- * about whether it is a C project or not. */
-void DoxyparseResults::detectProgrammingLanguage(FileNameListIterator &fnli)
-{
-  FileName* fn;
-  for (fnli.toFirst(); (fn=fnli.current()); ++fnli) {
-    std::string filename = fn->fileName();
-    if (
-        checkLanguage(filename, ".cc") ||
-        checkLanguage(filename, ".cxx") ||
-        checkLanguage(filename, ".cpp") ||
-        checkLanguage(filename, ".java") ||
-        checkLanguage(filename, ".py") ||
-        checkLanguage(filename, ".pyw")
-       ) {
-      is_c_code = false;
-    }
-  }
-}
-
-bool DoxyparseResults::checkLanguage(std::string &filename, std::string extension)
-{
-  if (filename.find(extension, filename.size() - extension.size()) != std::string::npos) {
-    return true;
-  } else {
-    return false;
-  }
 }
 
 void DoxyparseResults::printFile(FileDef *fd)
@@ -222,7 +191,7 @@ void DoxyparseResults::printReferenceTo(MemberDef *md)
 
 int DoxyparseResults::isPartOfCStruct(MemberDef *md)
 {
-  return is_c_code && md->getClassDef() != NULL;
+  return isCCode && md->getClassDef() != NULL;
 }
 
 void DoxyparseResults::printCStructMember(MemberDef *md)
@@ -248,7 +217,7 @@ void DoxyparseResults::printWhereItWasDefined(MemberDef *md)
 
 void DoxyparseResults::printClass(ClassDef *cd)
 {
-  if (is_c_code) {
+  if (isCCode) {
     printCModule(cd);
   } else {
     printClassInformation(cd);

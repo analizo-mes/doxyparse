@@ -25,6 +25,7 @@ doxyparseinput.cpp
 doxyparseinterface.cpp
 doxyparser.cpp
 doxyparseresults.cpp
+doxyparselanguagechecker.cpp
 )
 
 target_link_libraries(doxyparse
