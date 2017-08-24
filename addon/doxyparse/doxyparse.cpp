@@ -1,5 +1,7 @@
 #include "doxyparse.h"
-
+/**
+* Initialize Doxygen modules for all suported languages
+*/
 Doxyparse::Doxyparse()
 {
   initDoxygen();

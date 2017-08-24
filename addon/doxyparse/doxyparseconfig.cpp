@@ -1,5 +1,8 @@
 #include "doxyparseconfig.h"
 
+/**
+* Create temporary Directory with the name doxyparse-PROCESS_ID
+*/
 DoxyparseConfig::DoxyparseConfig()
 {
   temporaryDirectory << "/tmp/doxyparse-" << getpid();
@@ -12,6 +15,7 @@ DoxyparseConfig::~DoxyparseConfig()
 
 void DoxyparseConfig::config()
 {
+  // Set doxygem's configuration values (environment variables)
   checkConfiguration();
   setDoxyparseConfiguration();
   adjustConfiguration();
