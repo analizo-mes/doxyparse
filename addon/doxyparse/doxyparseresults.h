@@ -37,7 +37,7 @@ class DoxyparseResults
     std::map<std::string, bool> modules;
     std::string current_module;
     YAML::Emitter *yaml;
-		void loadFileMembersIntoYaml(MemberList *member_list, FileDef *file_definition, ClassSDict *classes);
+    void loadFileMembersIntoYaml(MemberList *member_list, FileDef *file_definition, ClassSDict *classes);
     void verifyEmptyMemberListOrClasses(MemberList *member_list,
                                         ClassSDict *classes,
                                         enum YAML::EMITTER_MANIP value);
@@ -47,7 +47,6 @@ class DoxyparseResults
     void printFile(std::string file);
     void printModule(std::string module);
     void listMembers(MemberList *ml);
-    void listMembers2(MemberList *ml);
     void printDefines();
     void lookupSymbol(Definition *d);
     void printDefinition(std::string type, std::string signature,
