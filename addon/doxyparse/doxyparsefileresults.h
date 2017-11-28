@@ -16,5 +16,7 @@ class DoxyparseFileResults
    ~DoxyparseFileResults();
 
     virtual void listSymbols() = 0;
+
+    YAML::Emitter *yaml;
 }
 

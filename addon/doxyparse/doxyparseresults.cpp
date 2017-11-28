@@ -272,6 +272,7 @@ void DoxyparseResults::classInformation(ClassDef* class_def) {
   *this->yaml << YAML::EndMap;
 }
 
+//TODO DELETE METHOD
 void DoxyparseResults::cModule(ClassDef* class_def) {
   MemberList* member_list = class_def->getMemberList(MemberListType_variableMembers);
   if (member_list) {
