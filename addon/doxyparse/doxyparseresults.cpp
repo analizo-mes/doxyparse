@@ -25,30 +25,17 @@ void DoxyparseResults::verifyEmptyMemberListOrClasses(MemberList *member_list, C
 void DoxyparseResults::listSymbols()
 {
   FileNameListIterator file_name_list_iterator = this->getFiles();
-  this->detectIsCCode(file_name_list_iterator);
   file_name_list_iterator.toFirst();
 
   for (FileName *file_name; (file_name=file_name_list_iterator.current()); ++file_name_list_iterator) {
     FileNameIterator file_name_iterator(*file_name);
-
-    this->yaml = new YAML::Emitter();
-    *this->yaml << YAML::BeginMap;
-
-    for (FileDef *file_def; (file_def=file_name_iterator.current()); ++file_name_iterator) {
-      this->addKeyYaml(file_def->absFilePath().data()); //Print file
-
-      ClassSDict *classes = file_def->getClassSDict();
-      MemberList *member_list = file_def->getMemberList(MemberListType_allMembersList);
-
-      this->verifyEmptyMemberListOrClasses(member_list, classes, YAML::BeginMap);
-
-      this->loadFileMembersIntoYaml(member_list, file_def, classes);
-
-      this->verifyEmptyMemberListOrClasses(member_list, classes, YAML::EndMap);
+    DoxyparseFileResults file_result;
+    if (this->detectIsCCode(file_name)) {
+      file_result = DoxyparseResultStructured();
+    } else {
+      file_result = DoxyparserResultsOOParser();
     }
-    *this->yaml << YAML::EndMap;
-    printf("%s\n", (*this->yaml).c_str());
-    delete this->yaml;
+    file_result.listSymbols(file_name);
   }
   // TODO print external symbols referenced
 }
@@ -85,22 +72,17 @@ void DoxyparseResults::loadFileMembersIntoYaml(MemberList *member_list, FileDef 
 
 /* Detects the programming language of the project. Actually, we only care
  * about whether it is a C project or not. */
-void DoxyparseResults::detectIsCCode(FileNameListIterator& file_name_list_iterator) {
-  FileName* file_name;
-  for (file_name_list_iterator.toFirst(); (file_name=file_name_list_iterator.current()); ++file_name_list_iterator) {
-    std::string filename = file_name->fileName();
-    if (
-        this->checkLanguage(filename, ".cc") ||
-        this->checkLanguage(filename, ".cxx") ||
-        this->checkLanguage(filename, ".cpp") ||
-        this->checkLanguage(filename, ".java") ||
-        this->checkLanguage(filename, ".py") ||
-        this->checkLanguage(filename, ".pyw") ||
-        this->checkLanguage(filename, ".cs")
-       ) {
-      this->is_c_code = false;
-    }
-  }
+void DoxyparseResults::detectIsCCode(FileName* file_name) {
+  std::string filename = file_name->fileName();
+  bool is_c_code = !(
+    this->checkLanguage(filename, ".cc") ||
+    this->checkLanguage(filename, ".cxx") ||
+    this->checkLanguage(filename, ".cpp") ||
+    this->checkLanguage(filename, ".java") ||
+    this->checkLanguage(filename, ".py") ||
+    this->checkLanguage(filename, ".pyw") ||
+    this->checkLanguage(filename, ".cs")
+   );
 }
 
 bool DoxyparseResults::checkLanguage(std::string& filename, std::string extension) {

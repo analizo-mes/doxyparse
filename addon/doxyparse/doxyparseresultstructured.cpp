@@ -3,14 +3,14 @@
 
 
 DoxyparResultStructured::DoxyparseResultStructured(){}
+DoxyparResultStructured::~DoxyparseResultStructured(){}
 
 void DoxyparseResults::load_file_members_into_yaml(MemberList *member_list, FileDef *file_def, ClassSDict *structies) {
   if (member_list) {
-
-    this->addValue(file_def->getOutputFileBase().data());
-    this->addValue(DEFINES, YAML::BeginMap);
+    this->add_value(file_def->getOutputFileBase().data());
+    this->add_value(DEFINES, YAML::BeginMap);
     *this->yaml << YAML::BeginSeq;
-    this->listMembers(member_list);
+    this->list_members(member_list);
 
     if (structies) {
       *this->yaml << YAML::BeginMap;
@@ -32,7 +32,16 @@ void DoxyparseResults::list_struct_definition(ClassDef* struct_def) {
     MemberListIterator member_list_iterator(*member_list);
     MemberDef* member_def;
     for (member_list_iterator.toFirst(); (member_def=member_list_iterator.current()); ++member_list_iterator) {
-      this->printDefinition(VARIABLE, struct_def->name().data() + std::string("::") + member_def->name().data(), member_def->getDefLine(), member_def);
+      this->print_definition(VARIABLE, struct_def->name().data() + std::string("::") + member_def->name().data(), member_def->getDefLine(), member_def);
     }
   }
+}
+
+void DoxyparseResults::referenceTo(MemberDef* member_def) {
+  std::string type = member_def->memberTypeName().data();
+  std::string defined_in = "";
+  std::string signature = "";
+  signature = member_def->getClassDef()->name().data() + std::string("::") + this->function_signature(member_def);
+  defined_in = member_def->getClassDef()->getFileDef()->getOutputFileBase().data();
+  this->print_reference_to(type, signature, defined_in);
 }

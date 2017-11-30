@@ -18,5 +18,7 @@ class DoxyparseResultStructured
 
   private:
     void list_struct_definition(ClassDef* struct_def);
+    void reference_to(MemberDef* member_def);
+    void load_file_members_into_yaml(MemberList *member_list, FileDef *file_def, ClassSDict *structies);
 }
 
