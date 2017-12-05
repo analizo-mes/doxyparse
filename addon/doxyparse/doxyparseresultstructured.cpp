@@ -1,11 +1,7 @@
-#include "doxyparseresultstructured"
+#include "doxyparseresultstructured.h"
 #include <yaml-cpp/yaml.h>
 
-
-DoxyparResultStructured::DoxyparseResultStructured(){}
-DoxyparResultStructured::~DoxyparseResultStructured(){}
-
-void DoxyparseResults::load_file_members_into_yaml(MemberList *member_list, FileDef *file_def, ClassSDict *structies) {
+void DoxyparseResultStructured::load_file_members_into_yaml(MemberList *member_list, FileDef *file_def, ClassSDict *structies) {
   if (member_list) {
     this->add_value(file_def->getOutputFileBase().data());
     this->add_value(DEFINES, YAML::BeginMap);
@@ -26,7 +22,7 @@ void DoxyparseResults::load_file_members_into_yaml(MemberList *member_list, File
   }
 }
 
-void DoxyparseResults::list_struct_definition(ClassDef* struct_def) {
+void DoxyparseResultStructured::list_struct_definition(ClassDef* struct_def) {
   MemberList* member_list = struct_def->getMemberList(MemberListType_variableMembers);
   if (member_list) {
     MemberListIterator member_list_iterator(*member_list);
@@ -37,7 +33,7 @@ void DoxyparseResults::list_struct_definition(ClassDef* struct_def) {
   }
 }
 
-void DoxyparseResults::referenceTo(MemberDef* member_def) {
+void DoxyparseResultStructured::reference_to(MemberDef* member_def) {
   std::string type = member_def->memberTypeName().data();
   std::string defined_in = "";
   std::string signature = "";

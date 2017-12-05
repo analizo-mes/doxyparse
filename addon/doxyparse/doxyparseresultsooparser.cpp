@@ -1,6 +1,27 @@
 #include "doxyparseresultsooparser.h"
 #include <yaml-cpp/yaml.h>
 
+void DoxyparseResultsOOParser::load_file_members_into_yaml(MemberList *member_list, FileDef *file_def, ClassSDict *classes) {
+  if (member_list) {
+    this->add_value(file_def->getOutputFileBase().data());
+    this->add_value(DEFINES, YAML::BeginMap);
+    *this->yaml << YAML::BeginSeq;
+    this->list_members(member_list);
+
+    if (classes) {
+      *this->yaml << YAML::BeginMap;
+      ClassSDict::Iterator classes_element_iterator(*classes);
+      ClassDef *classes_def;
+      for (classes_element_iterator.toFirst(); (classes_def = classes_element_iterator.current()); ++classes_element_iterator) {
+        this->class_information(classes_def);
+      }
+      *this->yaml << YAML::EndMap;
+    }
+    *this->yaml << YAML::EndSeq;
+    *this->yaml << YAML::EndMap;
+  }
+}
+
 void DoxyparseResultsOOParser::class_information(ClassDef* class_def) {
   this->add_value(class_def->name().data());
   BaseClassList* baseClasses = class_def->baseClasses();

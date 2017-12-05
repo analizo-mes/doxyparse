@@ -30,6 +30,9 @@ doxyparseinput.cpp
 doxyparseinterface.cpp
 doxyparser.cpp
 doxyparseresults.cpp
+doxyparsefileresults.cpp
+doxyparseresultsooparser.cpp
+doxyparseresultstructured.cpp
 )
 
 target_link_libraries(doxyparse

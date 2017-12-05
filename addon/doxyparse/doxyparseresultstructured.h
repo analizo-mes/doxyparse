@@ -10,15 +10,19 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 
-class DoxyparseResultStructured
+class DoxyparseResultStructured : public DoxyparseFileResults
 {
   public:
-    DoxyparseResultStructured();
-   ~DoxyparseResultStructured();
+    DoxyparseResultStructured(){};
+    ~DoxyparseResultStructured(){};
+
+  protected:
+    void reference_to(MemberDef* member_def) override;
 
   private:
+    const std::string VARIABLE = "variable";
     void list_struct_definition(ClassDef* struct_def);
-    void reference_to(MemberDef* member_def);
     void load_file_members_into_yaml(MemberList *member_list, FileDef *file_def, ClassSDict *structies);
-}
+};
 
+#endif
